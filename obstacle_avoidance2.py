@@ -5,7 +5,7 @@ speed = 30
 
 def turn_backwards(speed):
   fc.turn_right(speed)
-  fc.turn_right(speed)
+  fc.turn_right(speed+20)
   
 def main():
     while True:
