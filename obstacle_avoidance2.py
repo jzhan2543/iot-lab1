@@ -19,7 +19,8 @@ def main():
         
         if tmp != [2,2,2,2]:
             fc.stop()
-            fc.backward(speed)
+            fc.backward(speed+20)
+            time.sleep(0.5)
             list_of_directions = [fc.turn_right, fc.turn_left, turn_backwards]
             random.choice(list_of_directions)(speed)
         else:
