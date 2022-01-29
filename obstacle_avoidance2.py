@@ -1,5 +1,6 @@
 import picar_4wd as fc
 import random
+import time
 
 speed = 30
 
