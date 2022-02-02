@@ -9,16 +9,16 @@ np.set_printoptions(suppress=True,linewidth=sys.maxsize,threshold=sys.maxsize)
 
 def scan_and_map():
     #declaring variables
-    STEP = 18
+    STEP = 10
     ANGLE_RANGE = 180
     max_angle = ANGLE_RANGE/2
     min_angle = -ANGLE_RANGE/2
     us_step = STEP
     supersonic_data = []
-    current_angle = 0
+    current_angle = -90
 
     #scanning 180 degrees and returning (angle,distance) tuples as a list called supersonic_data
-    for step in range(int((2*ANGLE_RANGE / STEP))):
+    for step in range(current_angle, int(ANGLE_RANGE/2)+STEP, STEP):
         supersonic_data.append((current_angle,fc.get_distance_at(current_angle)))
         current_angle += us_step
         if current_angle >= max_angle:
