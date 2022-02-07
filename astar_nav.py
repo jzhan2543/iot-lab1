@@ -110,22 +110,51 @@ def calculate_best_route(map, loc, goal, heuristic='astar'):
                 open.append(child)
 
 
+def convert_Num2List(x): 
+    '''
+    Takes 2D numpy array of (0,1) and 
+    converts to 2d Lists with heuristics value 
+    '''
+    twoD = x.tolist()
+    for row_idx, row in enumerate(twoD): 
+        for col_idx, col in enumerate(row):
+            if col == 1: 
+                twoD[row_idx][col_idx] = -10
+    return twoD
+
+
+def convert_list2Numpy(x):
+    '''
+    Takes 2d list of (0,-10) and 
+    converts to 2d numpy of (0,1)
+    '''
+    for row_idx, row in enumerate(x):
+        for col_idx, col in enumerate(row):
+            if col == -10:
+                x[row_idx][col_idx] = 1
+    twoD = np.array(x)
+    return twoD
+
+
 if __name__ == "__main__": 
     #set up 
 
-    map =  [[0, 0, 0, 0, -10, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -10, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -10, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -10, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -10, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -10, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -10, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -10, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, -10, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+    map_numpy =  np.array([[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+
+    map_list = convert_Num2List(map_numpy)
+    print(map_list)
 
     start = (0, 0)
     end = (8, 8)
-    path = calculate_best_route(map, start, end)
+    path = calculate_best_route(map_list, start, end)
     print(path)
 
