@@ -6,8 +6,7 @@ Calculate the Best Route
 Inspired by https://www.redblobgames.com/pathfinding/a-star/implementation.html
 """
 
-ACTIONS = ['left', 'up', 'right', 'down']
-POSITIONS = [(0, 1), (0, -1), (1, 0), (0, 1)]
+POSITIONS = [(0, 1), (0, -1), (1, 0), (-1, 0)]
 
 class Node(): 
     def __init__(self, parent=None, position=None): 
@@ -39,8 +38,8 @@ def calculate_best_route(map, loc, goal, heuristic='astar'):
     end_node = Node(None, goal)
     end_node.g = end_node.h = end_node.f = 0
 
-    open = []
-    closed = [] 
+    open = [] #nodes
+    closed = [] #positions
     open.append(start_node)
 
     if heuristic == 'astar':
@@ -57,7 +56,7 @@ def calculate_best_route(map, loc, goal, heuristic='astar'):
             
             # remove current node from open list and add to closed list
             open.pop(current_index)
-            closed.append(current_node)
+            closed.append(current_node.position)
 
             # if we find goal state
             if current_node == end_node: #TODO update __eq__ for this 
@@ -71,8 +70,7 @@ def calculate_best_route(map, loc, goal, heuristic='astar'):
             # if we haven't found goal: generate children 
             # need to verify which adjacent squares are possible to move to (JEFF: i think it's only 4 not 8)
             children = []
-
-            #rewrite this later 
+            
             for new_position in POSITIONS:
                 node_position = (
                     current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
@@ -91,8 +89,8 @@ def calculate_best_route(map, loc, goal, heuristic='astar'):
             for child in children:
 
                 #if we've already checked a position 
-                for closed_node in closed: 
-                    if child == closed_node: 
+                for closed_position in closed: 
+                    if child.position[0] == closed_position[0] and child.position[1] == closed_position[1]:
                         continue
                 
                 #generate node values g h f 
@@ -114,22 +112,14 @@ def convert_Num2List(x):
     converts to 2d Lists with heuristics value 
     '''
     twoD = x.tolist()
-    for row_idx, row in enumerate(twoD): 
-        for col_idx, col in enumerate(row):
-            if col == 1: 
-                twoD[row_idx][col_idx] = -10
     return twoD
 
 
 def convert_list2Numpy(x):
     '''
-    Takes 2d list of (0,-10) and 
+    Takes 2d list of (0,1) and 
     converts to 2d numpy of (0,1)
     '''
-    for row_idx, row in enumerate(x):
-        for col_idx, col in enumerate(row):
-            if col == -10:
-                x[row_idx][col_idx] = 1
     twoD = np.array(x)
     return twoD
 
@@ -138,7 +128,7 @@ if __name__ == "__main__":
     #set up 
 
     map_numpy = np.array(
-        [[0, 0, 0, 0, 1, 1, 1, 1, 1, 1],
+        [[0, 0, 0, 0, 1, 1, 1, 0, 1, 1],
          [1, 1, 0, 0, 0, 0, 0, 0, 1, 1],
          [1, 1, 1, 1, 1, 1, 0, 0, 1, 1]]
     )
@@ -147,7 +137,7 @@ if __name__ == "__main__":
     print(map_list)
 
     start = (0, 0)
-    end = (2, 6)
+    end = (0, 7)
     path = calculate_best_route(map_list, start, end)
     print(path)
 
