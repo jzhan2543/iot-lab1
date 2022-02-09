@@ -7,8 +7,7 @@ Inspired by https://www.redblobgames.com/pathfinding/a-star/implementation.html
 """
 
 ACTIONS = ['left', 'up', 'right', 'down']
-POSITIONS = [(0, 1), (0, -1), (1, 0), (0, 1),
-             (-1, -1), (-1, 1), (1, -1), (1, 1)]
+POSITIONS = [(0, 1), (0, -1), (1, 0), (0, 1)]
 
 class Node(): 
     def __init__(self, parent=None, position=None): 
@@ -74,13 +73,12 @@ def calculate_best_route(map, loc, goal, heuristic='astar'):
             children = []
 
             #rewrite this later 
-            for new_position in [(0, 1), (0, -1), (1, 0), (0, 1),
-                                 (-1, -1), (-1, 1), (1, -1), (1, 1)]:
+            for new_position in POSITIONS:
                 node_position = (
                     current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
                 
                 #ensure in boundaries
-                if node_position[0] > (len(map) - 1) or node_position[0] < 0 or node_position[1] > (len(map[len(map)-1]) - 1) or node_position[1] < 0:
+                if node_position[0] > (len(map)-1) or node_position[0] < 0 or node_position[1] > (len(map[0])-1) or node_position[1] < 0:
                     continue 
 
                 if map[node_position[0]][node_position[1]] != 0:
@@ -139,22 +137,17 @@ def convert_list2Numpy(x):
 if __name__ == "__main__": 
     #set up 
 
-    map_numpy =  np.array([[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
-            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]])
+    map_numpy = np.array(
+        [[0, 0, 0, 0, 1, 1, 1, 1, 1, 1],
+         [1, 1, 0, 0, 0, 0, 0, 0, 1, 1],
+         [1, 1, 1, 1, 1, 1, 0, 0, 1, 1]]
+    )
 
     map_list = convert_Num2List(map_numpy)
     print(map_list)
 
     start = (0, 0)
-    end = (8, 8)
+    end = (2, 6)
     path = calculate_best_route(map_list, start, end)
     print(path)
 
