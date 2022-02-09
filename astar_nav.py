@@ -1,5 +1,4 @@
 import numpy as np 
-import math
 
 """
 Calculate the Best Route 
@@ -25,13 +24,17 @@ def calculate_best_route(map, loc, goal, heuristic='astar'):
     """
     Based on A* but can be applied to alternate search methods 
 
-    :map      : 2d numpy array 
+    :map      : 2d numpy array or 2d array 
     :loc      : location of current car
     :goal     : location of potential goal
     :heuristic: default is a* 
     
     Returns list of tuples as best path 
     """
+    
+    if isinstance(map, (np.ndarray, np.generic)): 
+        map = map.tolist() 
+
 
     start_node = Node(None, loc)
     start_node.g = start_node.h = start_node.f = 0
@@ -106,23 +109,6 @@ def calculate_best_route(map, loc, goal, heuristic='astar'):
                 open.append(child)
 
 
-def convert_Num2List(x): 
-    '''
-    Takes 2D numpy array of (0,1) and 
-    converts to 2d Lists with heuristics value 
-    '''
-    twoD = x.tolist()
-    return twoD
-
-
-def convert_list2Numpy(x):
-    '''
-    Takes 2d list of (0,1) and 
-    converts to 2d numpy of (0,1)
-    '''
-    twoD = np.array(x)
-    return twoD
-
 
 if __name__ == "__main__": 
     #set up 
@@ -133,11 +119,8 @@ if __name__ == "__main__":
          [1, 1, 1, 1, 1, 1, 0, 0, 1, 1]]
     )
 
-    map_list = convert_Num2List(map_numpy)
-    print(map_list)
-
     start = (0, 0)
     end = (0, 7)
-    path = calculate_best_route(map_list, start, end)
+    path = calculate_best_route(map_numpy, start, end)
     print(path)
 
