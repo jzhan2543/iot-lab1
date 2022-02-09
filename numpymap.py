@@ -6,7 +6,7 @@ from math import sin, cos, radians, sqrt
 import sys
 np.set_printoptions(suppress=True,linewidth=sys.maxsize,threshold=sys.maxsize)
 
-def scan_and_map():
+def supersonic_scan():
     '''
     This function moves the supersonic sensor 180 degrees
     and records angle & distance tuples into list supersonic_data.
@@ -32,16 +32,25 @@ def scan_and_map():
             us_step = STEP
     return supersonic_data
 
-def get_coords(car_position,angle,distance,scale = 5):
+def get_coords(car_position, car_direction, angle, distance, scale = 5):
     '''
     Converts polar angle + distance tuples into cartesian coords originating at our car,
     which is located at the bottom center where the angle is measured such that
     -90 degrees is directly to the left of the car and 90 degrees is the right.
-    scale will change the scale of the numpy map using floor division, defaulting to 5x.
+    scale will change the scale of the numpy map using floor division rounding, defaulting to 5cm.
+    Accounts for direction of the car in relation to the master_map. 
+    Only works if the car is pointing straight, left or right.
     '''
-    x = (distance // scale) * cos(radians(90-angle))
-    y = (distance // scale) * sin(radians(90-angle))
-    return car_position[0]-round(y), car_position[1]+round(x)
+    x = round((distance // scale) * cos(radians(90-angle)))
+    y = round((distance // scale) * sin(radians(90-angle)))
+    if cos(radians(car_direction)) == 1:
+        return car_position[0]-y, car_position[1]+x
+    elif sin(radians(car_direction)) == 1:
+        return car_position[0]+x, car_position[1]+y
+    elif sin(radians(car_direction)) == -1:
+        return car_position[0]-x, car_position[1]-y
+    else:
+        raise Exception("Car turned around!")
 
 def cartesian_distance(pta, ptb):
     '''
@@ -86,36 +95,42 @@ def dda_line(obj1,obj2,grid,threshold=4):
             grid[int(coord[0]),int(coord[1])] = 1
     return grid
 
-def place_objects(supersonic_data, gridsize=(50,51)):
+def place_objects(supersonic_data, car_position, car_direction, grid):
     '''
     Supersonic_data is a list of polar coordinate tuples in the form (angle, distance).
-    Builds a 100x101 array with each vertex representing a 5cm distance.
-    Objects detected in supersonice_data are recorded onto the grid with a '1'. 
-    the car's position is marked at the bottom center with '8'.
+    Objects detected in supersonice_data are recorded onto the grid with a '1',
+    those close enough to each other will be combined with dda_line. 
     '''
+
+
+    
+    #Option to create grid with car located at bottom center with input variable gridsize
+    #grid = np.zeros(gridsize, dtype=np.int32)
+    #car_position = (-1,int(grid.shape[1]/2))
+    #grid[car_position] = 8  
 
     #Alternative method to create grid based on furthest object detected and car location:
     #furthest = int(max(supersonic_data, key=lambda x:x[1])[1])
     #gridsize = (furthest, furthest+1)
-    
-    #Creating grid with car located at bottom center
-    grid = np.zeros(gridsize, dtype=np.int32)
-    car_position = (-1,int(grid.shape[1]/2))
-    grid[car_position] = 8  
 
     #writing '1's to the grid for recognized data and recording those points in [gridcoords]
     gridcoords = []
     for datum in supersonic_data:
-        gridcoords.append(get_coords(car_position,*datum))
-        grid[get_coords(car_position,*datum)] = 1
+        gridcoords.append(get_coords(car_position,car_direction,*datum))
+        grid[get_coords(car_position,car_direction,*datum)] = 1
     
     #using gridcoords to draw lines between close objects on the grid
     for i in range(1,len(gridcoords)):
         dda_line(gridcoords[i-1],gridcoords[i],grid)
     
     return grid
-
+'''
+Test Example:
 if __name__ == "__main__":
-    supersonic_data = scan_and_map()
-    print(place_objects(supersonic_data))
+    grid = np.zeros((50,51), dtype=np.int32)
+    car_position = (-1,int(grid.shape[1]/2))
+    grid[car_position] = 8
+    supersonic_data = supersonic_scan()
+    print(place_objects(supersonic_data, car_position,0,grid))
 
+'''
