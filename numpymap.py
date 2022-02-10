@@ -44,11 +44,11 @@ def get_coords(car_position, car_direction, angle, distance, scale = 5):
     x = round((distance // scale) * cos(radians(90-angle)))
     y = round((distance // scale) * sin(radians(90-angle)))
     if cos(radians(car_direction)) == 1:
-        return car_position[0]-y, car_position[1]+x
+        return car_position[0]-y - 1, car_position[1]+x - 1
     elif sin(radians(car_direction)) == 1:
-        return car_position[0]+x, car_position[1]+y
+        return car_position[0]+x - 1, car_position[1]+y - 1 
     elif sin(radians(car_direction)) == -1:
-        return car_position[0]-x, car_position[1]-y
+        return car_position[0]-x - 1, car_position[1]-y - 1
     else:
         raise Exception("Car turned around!")
 
@@ -117,7 +117,9 @@ def place_objects(supersonic_data, car_position, car_direction, grid):
     gridcoords = []
     for datum in supersonic_data:
         gridcoords.append(get_coords(car_position,car_direction,*datum))
-        grid[get_coords(car_position,car_direction,*datum)] = 1
+        print(gridcoords)
+        x, y = get_coords(car_position, car_direction, *datum)
+        grid[x,y] = 1
     
     #using gridcoords to draw lines between close objects on the grid
     for i in range(1,len(gridcoords)):
