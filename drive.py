@@ -91,6 +91,7 @@ if __name__ == "__main__":
         #start at bottom center
         starting_position = (master_map.shape[0]-1,int(master_map.shape[1]/2))
 
+
 #        define end goal
 #        x = input("Enter x goal :")
 #        y = input("Enter y goal :")
@@ -98,12 +99,16 @@ if __name__ == "__main__":
         end_goal = (0,0) #tbd
         wall_e = car() 
 
+        print("starting position: " + str(starting_position))
+        print("goal" + str(end_goal))
+        print(master_map.tolist())
+
         while wall_e.get_position() != end_goal:
             #Scan with camera for stop signs:
                 #if stop sign, stop for 5 seconds and dont scan again
             supersonic_data = supersonic_scan()
             master_map = place_objects(supersonic_data,wall_e.get_position(),wall_e.get_direction(),master_map)
-            next_steps = astar_nav.calculate_best_route(astar_nav.convert_Num2List(master_map),wall_e.get_position(),end_goal)
+            next_steps = astar_nav.calculate_best_route(master_map,wall_e.get_position(),end_goal)
             wall_e.naive_maneuver(next_steps)
 
     finally: 
