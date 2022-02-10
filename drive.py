@@ -3,9 +3,9 @@ import numpy as np
 from numpymap import supersonic_scan, cartesian_distance, dda_line, place_objects
 from math import sin, cos, radians, sqrt
 import astar_nav
-import detect
-import detect.tflite
-import coco_labels.txt
+# import detect.py
+# import detect.tflite
+# import coco_labels.txt
 import time
 
 class car:
