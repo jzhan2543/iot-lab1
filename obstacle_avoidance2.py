@@ -1,9 +1,12 @@
+#import needed python modules
 import picar_4wd as fc
 import random
 import time
 
+#set default speed
 speed = 30
 
+#define backwards turn
 def turn_backwards(speed):
   fc.turn_right(speed)
   fc.turn_right(speed)
