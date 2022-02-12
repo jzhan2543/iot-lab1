@@ -19,7 +19,7 @@ def main():
         #check if array is empty
         if not scan_list:
             continue
-        #slicing values from position 3 to 7
+        #slicing values from position 3 to 6
         tmp = scan_list[3:7]
         print(tmp)
         #if at or less than ref distance then trigger condition to stop, go backwards, sleep, and pick a random direction to move in
