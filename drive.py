@@ -32,24 +32,26 @@ class car:
     def turn_left(self):
         #rotates car 90 degrees left and updates direction
         fc.turn_left(self.speed)
-        time.sleep(1.1)
+        time.sleep(0.87) #adjust this 
         fc.stop
+        time.sleep(0.1)
         self.direction -= 90 
         return 
 
     def turn_right(self):
         #rotates car 90 degrees right and updates direction
         fc.turn_right(self.speed)
-        time.sleep(.85)
+        time.sleep(0.80)  # adjust this
         fc.stop
+        time.sleep(0.1)
         self.direction += 90 
         return 
 
     def naive_maneuver(self,target_coordinates):
         moves = 0
         x = 1
-        #len(target_coordinates)-1
-        while x <= 5: 
+        len(target_coordinates)-1
+        while x <= len(target_coordinates)-1: 
             coord = target_coordinates[x]
             # if moves > 10:
             #     return
@@ -128,7 +130,8 @@ if __name__ == "__main__":
 #        x = input("Enter x goal :")
 #        y = input("Enter y goal :")
 #        end_goal = (int(x),int(y)) #TBD
-        end_goal = (43,22) #tbd
+        end_goal = (40,28) #tbd
+        print("end_goal: " + str(end_goal))
         wall_e = car() 
 
         # while wall_e.get_position() != end_goal:
@@ -138,7 +141,10 @@ if __name__ == "__main__":
         supersonic_data = supersonic_scan()
         print("supersonic: " + str(supersonic_data))
         master_map = place_objects(supersonic_data,wall_e.get_position(),wall_e.get_direction(),master_map)
-        print("master_map: " + str(master_map.tolist()))
+        print("master_map: " )
+        #+ str(master_map.tolist())
+        print(np.matrix(master_map.tolist()))
+
         next_steps = astar_nav.calculate_best_route(master_map,wall_e.get_position(),end_goal)
         
         print(next_steps)

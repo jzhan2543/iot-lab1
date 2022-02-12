@@ -20,6 +20,26 @@ class Node():
         return self.position == node.position
 
 
+def add_buffer(map):
+    for row_idx, row in enumerate(map): 
+        for col_idx, col in enumerate(map): 
+            if map[row_idx][col_idx] == 1: 
+                print("adding buffer to obstacle at " + str((row_idx, col_idx)))
+                if row_idx - 5 >= 0 and row_idx + 5 <= len(row) - 1: 
+                    if col_idx - 5 >= 0 and col_idx + 5 <= len(col) - 1: 
+                        i = 1 
+                        while i <= 3: 
+                            j = 1 
+                            while j <= 3: 
+                                map[row_idx + i][col_idx + j] = 1
+                                map[row_idx + i][col_idx - j] = 1
+                                map[row_idx - i][col_idx - j] = 1
+                                map[row_idx - i][col_idx + j] = 1
+                                j = j + 1 
+                            i = i + 1
+    return map 
+
+
 def calculate_best_route(map, loc, goal, heuristic='astar'): 
     """
     Based on A* but can be applied to alternate search methods 
@@ -35,6 +55,9 @@ def calculate_best_route(map, loc, goal, heuristic='astar'):
     if isinstance(map, (np.ndarray, np.generic)): 
         map = map.tolist() 
 
+    # map = add_buffer(map)
+
+    # print(map)
 
     start_node = Node(None, loc)
     start_node.g = start_node.h = start_node.f = 0
