@@ -14,7 +14,7 @@ def turn_backwards(speed):
 def main():
     while True:
         #scan_step using default value of 35 cm distance
-        #scan_list is an array of 11 status readings (at 18 degree increments each) with values of 2 (greater than ref distance), 1 (if between 10 and ref), or 0 (if lower than ref)
+        #scan_list is an array of 11 status readings (at 18 degree increments each) with values of 2 (greater than ref distance), 1 (if between 10 and ref), or 0 (if lower than 10)
         scan_list = fc.scan_step(35)
         #check if array is empty
         if not scan_list:
